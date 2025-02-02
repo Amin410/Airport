@@ -1,8 +1,23 @@
-import pupeteer from "puppeteer";
-import fs from "fs";
 
+// const { DEFAULT_INTERCEPT_RESOLUTION_PRIORITY } = require('puppeteer')
+// const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
+
+
+import { DEFAULT_INTERCEPT_RESOLUTION_PRIORITY } from "puppeteer";
+import fs from "fs"
+import puppeteer from 'puppeteer-extra' 
+
+import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker';
+import Adblocker from 'puppeteer-extra-plugin-adblocker';
 const scrape = async () => {
-  const browser = await pupeteer.launch({headless: false});
+  puppeteer.use(
+    AdblockerPlugin({
+      // Optionally enable Cooperative Mode for several request interceptors
+      interceptResolutionPriority: DEFAULT_INTERCEPT_RESOLUTION_PRIORITY
+    })
+  )
+  
+  const browser = await puppeteer.launch({headless: false});
   const page = await browser.newPage();
   const url = "https://www.avionio.com/fr";
   await page.goto(url);
@@ -15,8 +30,16 @@ const scrape = async () => {
   const xp2 =  '::-p-xpath(//*[@id="content"]/div[2]/div[2]/div/div/a[1])'
   const el2 = await page.waitForSelector(xp2);
   await el2.click();
-  await sleep(9000);
+  await sleep(4000);
   
+  // await page.click(".ns-fclpr-e-8 span")
+  // await page.click(".ns-fi4p9-e-1 span")
+  
+// const xp3 =  '::-p-xpath(//*[@id="dismiss-button"]/div/span)'
+// const el3 = await page.waitForSelector(xp3);
+// await el3.click();
+//*[@id="dismiss-button"]/div/span
+
   function sleep(ms) {
     return new Promise((resolve) => {
       setTimeout(resolve, 7000);
